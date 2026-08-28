@@ -16,7 +16,7 @@ La separacion deja preparada la aplicacion para comparar Ethernet, Wi-Fi, Window
 - [psutil](https://github.com/giampaolo/psutil): libreria Python open source para consultar interfaces de red; no modifica configuraciones.
 - [Speedtest CLI de Ookla](https://www.speedtest.net/apps/cli): cliente oficial, gratuito, para obtener una medicion de Internet comparable a Speedtest.net.
 
-El programa no descarga ejecutables. Solo ejecuta `speedtest.exe` si tu lo instalaste previamente desde la fuente oficial y esta disponible en `PATH`. Tambien usa el comando `ping` incluido en Windows. No requiere permisos de administrador y no modifica Windows, DNS, firewall ni la configuracion de red.
+El programa no descarga ejecutables. Solo ejecuta el binario oficial instalado por Winget. No usa el antiguo paquete Python `speedtest-cli`, aunque exista instalado en el equipo. Tambien usa el comando `ping` incluido en Windows. No requiere permisos de administrador y no modifica Windows, DNS, firewall ni la configuracion de red.
 
 La prueba de ancho de banda transfiere datos reales hacia un servidor publico seleccionado por Ookla. El resultado muestra el servidor usado para facilitar comparaciones justas.
 

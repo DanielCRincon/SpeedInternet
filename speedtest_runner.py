@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import json
-import shutil
+import os
+from pathlib import Path
 import subprocess
 from dataclasses import dataclass
 
@@ -17,13 +18,22 @@ class SpeedMetrics:
 
 
 def _find_speedtest() -> str:
-    executable = shutil.which("speedtest.exe") or shutil.which("speedtest")
-    if not executable:
-        raise RuntimeError(
-            "No se encontro Speedtest by Ookla. Instalalo manualmente desde "
-            "https://www.speedtest.net/apps/cli y vuelve a ejecutar el programa."
-        )
-    return executable
+    """Find an explicitly configured binary or the official Winget installation."""
+    configured_path = os.environ.get("OOKLA_SPEEDTEST_EXE")
+    if configured_path and Path(configured_path).is_file():
+        return configured_path
+
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if local_app_data:
+        packages = Path(local_app_data) / "Microsoft" / "WinGet" / "Packages"
+        candidates = sorted(packages.glob("Ookla.Speedtest.CLI_*/speedtest.exe"))
+        if candidates:
+            return str(candidates[-1])
+
+    raise RuntimeError(
+        "No se encontro Speedtest by Ookla instalado por Winget. "
+        "Instalalo con: winget install --id Ookla.Speedtest.CLI --exact"
+    )
 
 
 def measure_speed() -> SpeedMetrics:
