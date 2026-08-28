@@ -38,6 +38,22 @@ python speed_test.py
 
 La prueba de ancho de banda transfiere datos reales y puede tardar unos segundos. Sus resultados dependen del servidor público seleccionado, la carga de red y la conexión local.
 
+## Prueba rapida
+
+1. Abre PowerShell dentro de la carpeta del proyecto.
+2. Instala las dependencias una sola vez con `python -m pip install -r requirements.txt`.
+3. Ejecuta `python speed_test.py`.
+4. Espera los resultados de interfaz, IP local, ping, jitter, perdida y velocidades.
+
+Si `python` no se reconoce como comando, instala Python 3.10 o superior desde [python.org](https://www.python.org/downloads/windows/) y marca **Add Python to PATH** durante la instalacion.
+
+## Seguridad y privacidad
+
+El repositorio publico contiene solo codigo fuente y documentacion; no incluye contrasenas, tokens, claves privadas, archivos `.env` ni datos de mediciones.
+
+El programa no requiere permisos de administrador y no modifica Windows, DNS, firewall ni la configuracion de red. Solo consulta datos locales, envia `ping` a `1.1.1.1` y transfiere datos temporales con servidores publicos de Speedtest.net para medir el ancho de banda. Usalo en una conexion donde sea aceptable consumir algunos datos.
+
+Antes de publicar cambios, ejecuta `git status` y evita anadir credenciales, archivos `.env`, claves SSH o configuraciones locales. Activa MFA o una passkey y las alertas de seguridad de Dependabot en GitHub.
 ## Salida esperada
 
 ```text
