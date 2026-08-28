@@ -25,6 +25,8 @@ def main() -> int:
         connection = get_active_connection()
         print(f"Interface: {connection.interface} ({connection.connection_type})")
         print(f"Local IP: {connection.local_ip}")
+        if connection.wifi_ssid:
+            print(f"Wi-Fi SSID: {connection.wifi_ssid}")
     except RuntimeError as error:
         print(f"Network information: N/A ({error})")
 

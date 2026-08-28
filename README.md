@@ -72,6 +72,7 @@ El repositorio publico contiene solo codigo fuente y documentacion. No debes pub
 Test time: 2026-08-28 08:30
 Interface: Ethernet (Ethernet)
 Local IP: 192.168.1.25
+Wi-Fi SSID: CABRERACLARO-5G
 Ping: 15.0 ms
 Jitter: 3.0 ms
 Packet loss: 0.0 %
