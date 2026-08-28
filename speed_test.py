@@ -1,11 +1,12 @@
-"""Punto de entrada de consola para el MVP Network Speed Test."""
+"""Console entry point for Network Speed Test."""
 
 from __future__ import annotations
 
 from datetime import datetime
 
-from measurements import measure_quality, measure_speed
+from measurements import measure_quality
 from network_info import get_active_connection
+from speedtest_runner import measure_speed
 
 
 def _format_ms(value: float | None) -> str:
@@ -40,6 +41,7 @@ def main() -> int:
         speed = measure_speed()
         print(f"Download: {_format_mbps(speed.download_mbps)}")
         print(f"Upload: {_format_mbps(speed.upload_mbps)}")
+        print(f"Speed test server: {speed.server_name} ({speed.server_location})")
     except RuntimeError as error:
         print(f"Speed test: N/A ({error})")
         return 1

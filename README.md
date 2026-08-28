@@ -1,59 +1,69 @@
 # Network Speed Test (Windows MVP)
 
-Aplicación de consola para Windows 10 y Windows 11 que muestra un diagnóstico puntual de la conexión actual: interfaz activa, tipo de conexión, IP local, latencia, jitter, pérdida de paquetes y velocidades de descarga y subida.
+Aplicacion de consola para Windows 10 y Windows 11 que muestra un diagnostico puntual de la conexion actual: interfaz activa, tipo de conexion, IP local, ping, jitter, perdida de paquetes y velocidades de descarga y subida.
 
 ## Arquitectura
 
-- `speed_test.py`: punto de entrada y presentación clara de resultados en la consola.
-- `network_info.py`: identifica la IP elegida por la ruta de salida y la vincula a una interfaz activa.
-- `measurements.py`: ejecuta las mediciones de calidad y de velocidad.
+- `speed_test.py`: punto de entrada y presentacion de resultados.
+- `network_info.py`: identifica la interfaz activa y la IP usada para salir a Internet.
+- `measurements.py`: ejecuta ping de Windows y calcula ping, jitter y perdida.
+- `speedtest_runner.py`: integra el cliente oficial Speedtest by Ookla ya instalado en el equipo.
 
-Esta separación deja preparada la aplicación para que en una siguiente etapa se guarden y comparen mediciones de Ethernet, Wi-Fi, host Windows o máquina virtual, sin añadir aún historial ni base de datos.
+La separacion deja preparada la aplicacion para comparar Ethernet, Wi-Fi, Windows host y maquinas virtuales en una etapa posterior, sin incluir aun base de datos ni historial.
 
-## Dependencias
+## Dependencias y seguridad
 
-- [psutil](https://github.com/giampaolo/psutil): consulta las interfaces y su estado mediante APIs del sistema; no modifica la configuración de red.
-- [speedtest-cli](https://github.com/sivel/speedtest-cli): cliente open source que elige un servidor público de Speedtest.net/Ookla y realiza las pruebas de descarga y subida. No requiere API key ni descarga ejecutables externos.
+- [psutil](https://github.com/giampaolo/psutil): libreria Python open source para consultar interfaces de red; no modifica configuraciones.
+- [Speedtest CLI de Ookla](https://www.speedtest.net/apps/cli): cliente oficial, gratuito, para obtener una medicion de Internet comparable a Speedtest.net.
 
-El comando estándar `ping` incluido en Windows se usa únicamente para enviar sondas ICMP. El programa no cambia la configuración de red y no requiere permisos de administrador.
+El programa no descarga ejecutables. Solo ejecuta `speedtest.exe` si tu lo instalaste previamente desde la fuente oficial y esta disponible en `PATH`. Tambien usa el comando `ping` incluido en Windows. No requiere permisos de administrador y no modifica Windows, DNS, firewall ni la configuracion de red.
 
-## Instalación
+La prueba de ancho de banda transfiere datos reales hacia un servidor publico seleccionado por Ookla. El resultado muestra el servidor usado para facilitar comparaciones justas.
 
-Requiere Python 3.10 o superior.
+## Instalacion
+
+Requiere Windows 10/11 de 64 bits y Python 3.10 o superior.
+
+1. Instala Speedtest CLI oficial de Ookla mediante `winget`:
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
+winget install --id Ookla.Speedtest.CLI --exact
+```
+
+Revisa y acepta los terminos que muestre el instalador. Despues comprueba la instalacion:
+
+```powershell
+speedtest --version
+```
+
+2. Instala la dependencia Python del proyecto:
+
+```powershell
 python -m pip install -r requirements.txt
 ```
 
-Si PowerShell impide activar el entorno virtual, puede ejecutarse directamente con `.\.venv\Scripts\python.exe` en los comandos siguientes.
+Opcionalmente puedes usar un entorno virtual. Si `python -m venv .venv` funciona en tu equipo, activalo antes de instalar dependencias. No es obligatorio para ejecutar este MVP.
 
-## Ejecución
+## Ejecucion
 
 ```powershell
 python speed_test.py
 ```
 
-La prueba de ancho de banda transfiere datos reales y puede tardar unos segundos. Sus resultados dependen del servidor público seleccionado, la carga de red y la conexión local.
+En la primera ejecucion, el cliente oficial de Ookla puede solicitar la aceptacion de su licencia y terminos de privacidad. El programa los envia como opciones explicitas al ejecutar el cliente; usalo solo si aceptas esos terminos.
 
-## Prueba rapida
+## Prueba y lectura de resultados
 
-1. Abre PowerShell dentro de la carpeta del proyecto.
-2. Instala las dependencias una sola vez con `python -m pip install -r requirements.txt`.
-3. Ejecuta `python speed_test.py`.
-4. Espera los resultados de interfaz, IP local, ping, jitter, perdida y velocidades.
+1. Cierra descargas, copias en la nube, streaming y VPN si quieres medir la capacidad de tu conexion.
+2. Ejecuta `python speed_test.py` dos o tres veces, dejando un minuto entre pruebas.
+3. Compara pruebas realizadas con el mismo servidor mostrado en `Speed test server`.
 
-Si `python` no se reconoce como comando, instala Python 3.10 o superior desde [python.org](https://www.python.org/downloads/windows/) y marca **Add Python to PATH** durante la instalacion.
+Ping bajo, jitter bajo y perdida de `0 %` normalmente indican una conexion estable. Las velocidades dependen del servidor, la hora, otros dispositivos y la red del proveedor. Para una comparacion con Speedtest.net, intenta usar el mismo servidor y hacer ambas pruebas en minutos cercanos.
 
-## Seguridad y privacidad
+## Seguridad del repositorio
 
-El repositorio publico contiene solo codigo fuente y documentacion; no incluye contrasenas, tokens, claves privadas, archivos `.env` ni datos de mediciones.
+El repositorio publico contiene solo codigo fuente y documentacion. No debes publicar contrasenas, tokens, claves privadas, archivos `.env` ni configuraciones locales. Antes de subir cambios, revisa `git status`. Protege tu cuenta GitHub con MFA o passkey y activa las alertas de Dependabot.
 
-El programa no requiere permisos de administrador y no modifica Windows, DNS, firewall ni la configuracion de red. Solo consulta datos locales, envia `ping` a `1.1.1.1` y transfiere datos temporales con servidores publicos de Speedtest.net para medir el ancho de banda. Usalo en una conexion donde sea aceptable consumir algunos datos.
-
-Antes de publicar cambios, ejecuta `git status` y evita anadir credenciales, archivos `.env`, claves SSH o configuraciones locales. Activa MFA o una passkey y las alertas de seguridad de Dependabot en GitHub.
 ## Salida esperada
 
 ```text
@@ -67,4 +77,5 @@ Jitter: 3.0 ms
 Packet loss: 0.0 %
 Download: 420.00 Mbps
 Upload: 95.00 Mbps
+Speed test server: Example ISP (Bogota)
 ```
